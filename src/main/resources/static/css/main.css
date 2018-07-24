@@ -1,0 +1,70 @@
+html {
+    height: 100%;
+    box-sizing: border-box;
+}
+
+html,
+body {
+    background: url("/images/back.jpg") repeat;
+}
+
+*,
+*:before,
+*:after {
+    box-sizing: inherit;
+}
+
+.tablediv {
+    max-height: 35rem;
+    overflow-y: auto;
+}
+
+.listdiv {
+    max-height: 8rem;
+}
+
+body {
+    position: relative;
+    margin: 0;
+    padding-bottom: 6rem;
+    height: 100%;
+}
+
+.error {
+    color: white;
+}
+
+.file_input {
+    position: absolute;
+    opacity: 0;
+    right: 0;
+    top: 0;
+}
+
+pre {
+    white-space: pre-wrap; /* Since CSS 2.1 */
+    white-space: -moz-pre-wrap; /* Mozilla, since 1999 */
+    white-space: -o-pre-wrap; /* Opera 7 */
+    word-wrap: break-word; /* Internet Explorer 5.5+ */
+    overflow-x: hidden;
+}
+
+@page {
+    size: A4;
+    margin: 15mm;
+}
+
+@media print {
+    html, body {
+        width: 210mm;
+        height: 297mm;
+    }
+
+    .no-print {
+        visibility: hidden !important;
+    }
+
+    .do-print {
+        visibility: visible !important;
+    }
+}

@@ -1,0 +1,68 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Кадры</title>
+    <div th:replace="fragments/header :: header-css"/>
+</head>
+<body>
+
+<div th:replace="fragments/header :: header"/>
+
+<div class="container mw-100 h-100">
+    <h2 class="d-flex align-items-center justify-content-center h-100">Кадры</h2>
+</div>
+
+<div th:replace="fragments/footer :: footer"/>
+<div class="modal fade" id="registerModal">
+    <div class="modal-dialog  modal-dialog-centered" role="document">
+        <div class="modal-content  border-0 p-3" style="background-color: transparent">
+            <div class="col-10 mx-auto">
+                <form autocomplete="off" action="#" th:action="@{/registration}"
+                      th:object="${user}" method="post" class="form-horizontal"
+                      role="form">
+                    <h1 class="text-white text-center">Регистрация</h1>
+                    <div class="form-group">
+                        <div>
+                            <label th:if="${#fields.hasErrors('name')}" th:errors="*{name}"
+                                   class="text-light validation-message"></label>
+                            <input type="text" th:field="*{name}" placeholder="Имя"
+                                   required="true" autofocus="true" class="form-control"/>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div>
+                            <label
+                                    th:if="${#fields.hasErrors('email')}" th:errors="*{email}"
+                                    class="text-light validation-message">E-mail already registered</label>
+                            <input type="email" th:field="*{email}" placeholder="Эл. почта"
+                                   required="true" autofocus="true" class="form-control"/>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div>
+                            <input type="password" th:field="*{password}"
+                                   required="true" autofocus="true" placeholder="Пароль" class="form-control"/>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div>
+                            <label
+                                    th:if="${#fields.hasErrors('password')}" th:errors="*{password}"
+                                    class="text-light validation-message">Passwords not equal</label>
+                            <input type="password" id="passRepeat" name="passRepeat"
+                                   required="true" autofocus="true" placeholder="Повтор пароля" class="form-control"/>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div>
+                            <button type="submit" class="text-light btn btn-primary btn-block">Зарегистрироваться</button>
+                        </div>
+                    </div>
+                    <span th:utext="${result}"></span>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

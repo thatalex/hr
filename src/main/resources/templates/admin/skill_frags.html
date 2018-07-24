@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+<div th:fragment="edit_fragment">
+    <input type="hidden" id="frag_message" th:value="${message}"/>
+    <div class="modal fade" id="editModal">
+        <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+            <div class="modal-content  border-0 p-3" style="background-color: rgba(0,0,0,0.3)">
+                <h4 class="text-light text-center my-3 mx-auto">Редактирование критерия</h4>
+                <form id="edit_form" autocomplete="off" action="#" th:action="@{/admin/skill/edit}"
+                      th:value="${edited_item}"
+                      th:object="${edited_item}" method="post" class="form-horizontal" role="form"
+                      enctype="multipart/form-data">
+                    <div class="row h-100">
+                        <div class="col-12 mx-auto">
+                            <input id="edit_id" type="hidden" th:value="*{id}" th:field="*{id}"/>
+                            <input id="edit_values" type="hidden" th:value="*{values}" th:field="*{values}"/>
+                            <div class="form-group">
+                                <label for="edit_name" generated="true" class="error"/>
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text">Наименование</span>
+                                    </div>
+                                    <input required="true" id="edit_name" type="text" th:field="*{name}"
+                                           class="form-control"/>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="edit_priority" generated="true" class="error"/>
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text">Приоритет, %</span>
+                                    </div>
+                                    <input required="true" id="edit_priority" name="percent_priority" type="number" min="1" step="1"
+                                           th:max="${max_priority}" th:value="${percent_priority}"
+                                           class="form-control"/>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="edit_values" generated="true" class="error"/>
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text">Значения</span>
+                                    </div>
+                                    <input required="true" id="edit_values" name="raw_values" type="text"
+                                           th:value="${raw_values}" placeholder="[Один, Два, Три] или [17-30]"
+                                           class="form-control" data-toggle="tooltip" data-placement="top"
+                                           title="Список значений о младшего к старшему разделенные запятой (пример: Один, Два, Три)
+                                           или начальное и конечное число разделенные дефисом (пример: 17-30)"/>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+                <div class="btn-group col-12">
+                    <button class="text-light btn bg-primary col-4 mx-auto"
+                            onclick="postdata('admin/skill/edit', $('#edit_form'))">Сохранить
+                    </button>
+                    <a type="button" class="text-light btn bg-primary col-4 mx-auto"
+                       onclick="$('#editModal').modal('hide')">Вернуться</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div th:fragment="table_fragment">
+    <input type="hidden" id="frag_message" th:value="${message}"/>
+    <div class="tablediv my-3 table-responsive">
+        <table class="table table-bordered ">
+            <thead class="thead">
+            <tr>
+                <th>Наименование</th>
+                <th>Приоритет</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:if="${skills.empty}">
+                <td colspan="2">Список пуст</td>
+            </tr>
+            <tr class="selectable_row" th:each="skill, iter : ${skills}" th:id="${'row_' + iter.count}"
+                th:onclick="${'javascript:onRowSelect(''row_' + iter.count +''', ' + skill.id+')'}">
+                <td th:text="${skill.name}"/>
+                <td th:text="${#numbers.formatDecimal(skill.priority * 100, 0, 0)}"/>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+</body>
+</html>

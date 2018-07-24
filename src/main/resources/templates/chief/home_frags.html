@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+
+<div th:fragment="table_fragment">
+    <input type="hidden" id="frag_message" th:value="${message}"/>
+    <div class="card-deck">
+        <div th:each="pretender, iter : ${pretenders}">
+            <div class="card m-3" th:onclick="${'showview(''chief/pretender?id=' + pretender.id + ''')'}">
+                <img class="card-img-top"
+                     th:src="@{(${pretender.image!=null}?('data:image/png;base64,' + ${pretender.image}): ('/images/nophoto.jpg'))}"
+                     height="200px" width="200px"
+                     alt="Card image cap"/>
+                <div class="card-body">
+                    <h5 class="card-title" th:text="${pretender.user.name}">name</h5>
+                    <p th:text="${'Рейтинг:     ' + #numbers.formatDecimal(pretender.getSkillRates() * 100, 0, 2)}"/>
+                </div>
+                <div class="card-footer">
+                    <small class="text-muted text-center"
+                           th:text="${'Возраст: '+pretender.getStringAge() + (pretender.invited?', приглашен':'')}">birth
+                    </small>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div th:fragment="view_fragment">
+    <div class="A4">
+        <div class="fixed-top sheet padding-15mm d-none d-print-block do-print" role="document"
+             style="position: fixed; top: 15mm">
+            <div class="modal-content  border-0 p-3" style="position: relative">
+                <div class="modal-header">
+                    <h5 class="modal-title col-12 text-center"
+                        th:text="${pretender.user.name + ', рейтинг ' + #numbers.formatDecimal(pretender.getSkillRates() * 100, 0, 2)}">
+                        анкета</h5>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-6">
+                            <img th:src="@{(${pretender.image!=null}?('data:image/png;base64,' + ${pretender.image}): ('/images/nophoto.jpg'))}"
+                                 class="card-img-top rounded " alt="image"/>
+                        </div>
+                        <div class="col-6">
+                            <p class="card-text">
+                            <p th:text="'Дата рождения: '+ ${#temporals.format(pretender.birthDate, 'dd-MM-yyyy')}"/>
+                            <p th:text="'Адрес:         '+ ${pretender.address}"/>
+                            <p th:text="'Телефон:       ' + ${pretender.phone}"/>
+                            </p>
+                            <div th:each="item: ${pretender.skillValues}">
+                                <p th:text="${item.skill.name + ': ' + item.valueName}"/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="viewModal">
+        <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+            <div class="modal-content  border-0 p-3" style="background-color: rgba(0,0,0,0.7)">
+                <div class="modal-header">
+                    <h5 class="modal-title text-light text-center col-12"
+                        th:text="${pretender.user.name + ', рейтинг ' + #numbers.formatDecimal(pretender.getSkillRates() * 100, 0, 2)}">
+                        name</h5>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-6">
+                            <img th:src="@{(${pretender.image!=null}?('data:image/png;base64,' + ${pretender.image}): ('/images/nophoto.jpg'))}"
+                                 class="card-img-top rounded " alt="image"/>
+                        </div>
+                        <div class="col-6 text-light">
+
+                            <p class="card-text">
+                            <p th:text="'Дата рождения: '+ ${#temporals.format(pretender.birthDate, 'dd-MM-yyyy')}"/>
+                            <p th:text="'Адрес:         '+ ${pretender.address}"/>
+                            <p th:text="'Телефон:       ' + ${pretender.phone}"/>
+                            </p>
+                            <div th:each="item: ${pretender.skillValues}">
+                                <p th:text="${item.skill.name + ': ' + item.valueName}"/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer hidden-print">
+                    <div class="row">
+                        <button class="text-light btn bg-primary mx-3"
+                                onclick="window.print()">Печать
+                        </button>
+                        <button class="text-light btn bg-primary mx-3"
+                                th:onclick="${'$(''#viewModal'').modal(''hide'');postdata(''chief/pretender/invite?id='+pretender.id+''')'}"
+                                th:text="${pretender.invited?'Пригласить повторно':'Пригласить'}">
+                            Пригласить
+                        </button>
+                        <button class="text-light btn bg-primary mx-3"
+                                th:onclick="${'$(''#viewModal'').modal(''hide'');postdata(''chief/pretender/delete?id='+pretender.id+''')'}">
+                            Удалить
+                        </button>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal"
+                                onclick="$('#viewModal').modal('hide')">Закрыть
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

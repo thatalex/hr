@@ -1,0 +1,117 @@
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<head>
+    <div th:fragment="header-css">
+        <!-- this is header-css -->
+        <link rel="stylesheet" type="text/css" th:href="@{/css/bootstrap.min.css}"/>
+        <link rel="stylesheet" type="text/css" th:href="@{/css/main.css}"/>
+        <link rel="stylesheet" type="text/css" th:href="@{/css/bootstrap-gtreetable.min.css}"/>
+        <link rel="stylesheet" type="text/css" th:href="@{/css/mdb.min.css}"/>
+        <link rel="stylesheet" type="text/css" th:href="@{/css/style.min.css}"/>
+        <script th:src="@{/js/jquery-3.3.1.min.js}"/>
+        <script th:src="@{/js/bootstrap.min.js}"/>
+        <script th:src="@{/js/jquery.validate.min.js}"/>
+        <script th:src="@{/js/additional-methods.min.js}"/>
+        <script th:src="@{/js/messages.min.js}"/>
+        <script th:inline="javascript" th:src="@{/js/functions.js}"/>
+        <script th:src="@{/js/bootstrap-gtreetable.min.js}"/>
+        <script th:src="@{/js/mdb.min.js}"/>
+        <script th:src="@{/js/bootstrap-gtreetable.ru.min.js}"/>
+        <script th:src="@{/js/popper.min.js}"/>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    </div>
+</head>
+<body>
+<div th:fragment="header">
+    <!-- this is header -->
+    <nav class="navbar justify-content-start navbar-dark bg-dark" style="opacity: 0.9">
+        <a sec:authorize="isAuthenticated()" class="navbar-brand text-white"
+           th:href="${#authorization.expression('hasAuthority(''ADMIN'')')}?@{/admin/home}:
+        (${#authorization.expression('hasAuthority(''CHIEF'')')}?@{/chief/home} :
+        (${#authorization.expression('hasAuthority(''PRETENDER'')')}?@{/pretender/home} : @{/}))">
+            <img th:src="@{/images/home_icon.png}" class="rounded  mx-auto" style="width: 32px"/>
+            &nbsp;Кадры
+        </a>
+        <a sec:authorize="!isAuthenticated()" class="navbar-brand text-white"
+           th:href="@{/}">
+            <img th:src="@{/images/home_icon.png}" class="rounded  mx-auto" style="width: 32px"/>
+            &nbsp;Кадры
+        </a>
+        <div th:replace="admin/header :: navbar"/>
+        <div th:replace="chief/header :: navbar"/>
+        <div th:replace="pretender/header :: navbar"/>
+        <ul class="nav ml-auto">
+            <li sec:authorize="!isAuthenticated()">
+                <a class="nav-link text-white" onclick="$('#registerModal').modal('show');" th:href="@{#}">
+                    &nbsp;Регистрация
+                </a>
+            </li>
+            <li sec:authorize="!isAuthenticated()" class="nav-item">
+                <a class="nav-link text-white" onclick="$('#loginModal').modal('show');" th:href="@{#}">
+                    &nbsp;Вход
+                </a>
+            </li>
+            <li class="nav-link text-white" sec:authorize="isAuthenticated()">
+                <a sec:authentication="name"/>
+            </li>
+            <li sec:authorize="isAuthenticated()" class="nav-item">
+                <a class="nav-link text-white" href="/logout" th:href="@{#}" onclick="$('#form').submit();">
+                    <span class="glyphicon glyphicon-log-out" aria-hidden="true"/>&nbsp;Выход
+                </a>
+                <form style="visibility: hidden" id="form" method="post" action="#"
+                      th:action="@{/logout}"></form>
+            </li>
+        </ul>
+    </nav>
+    <div class="modal fade" id="loginModal">
+        <div class="modal-dialog  modal-dialog-centered" role="document">
+            <div class="modal-content border-0 p-3" style="background-color: transparent">
+                <div class="col-10 mx-auto">
+                    <form th:action="@{/login}" method="post" class="form-horizontal"
+                          role="form">
+                        <h1 class="text-white  text-center">Вход</h1>
+                        <div class="form-group">
+                            <input type="email" name="email" id="email" th:value="${email}" class="form-control"
+                                   placeholder="user@email.com" required="true" autofocus="true"/>
+                        </div>
+                        <div class="form-group">
+                            <input type="password" name="password" id="password" th:value="${password}"
+                                   class="form-control"
+                                   placeholder="Пароль" required="true"/>
+                        </div>
+                        <div class="form-group">
+                            <input type="submit" class="text-light btn bg-primary btn-block" value="Войти"/>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="messageModal">
+        <div class="modal-dialog  modal-dialog-centered" role="document">
+            <div class="modal-content p-3">
+                <div class="modal-body">
+                    <p id="message_box" th:text="${message}"></p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script th:inline="javascript">
+        var msg = '';
+        /*[+
+            msg = [[${message}]];
+        +]*/
+        $(window).on('load', function () {
+            if (msg) {
+                $('#messageModal').modal('show');
+            }
+        });
+    </script>
+</div>
+</body>
+</html>

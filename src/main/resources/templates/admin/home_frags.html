@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+<div th:fragment="edit_fragment">
+    <input type="hidden" id="frag_message" th:value="${message}"/>
+    <div class="modal fade" id="editModal">
+        <div class="modal-dialog  modal-dialog-centered" role="document">
+            <div class="modal-content  border-0 p-3" style="background-color: rgba(0,0,0,0.3)">
+                <h4 class="text-light text-center my-3 mx-auto">Редактирование пользователя</h4>
+
+                <form id="edit_form" autocomplete="off" action="#" th:action="@{/admin/user/edit}"
+                      th:value="${edited_item}"
+                      th:object="${edited_item}" method="post" class="form-horizontal" role="form">
+                    <div class="row h-100">
+                        <div class="col-12 mx-auto">
+
+                            <input type="hidden" th:value="*{id}" th:field="*{id}"/>
+                            <div class="form-group">
+                                <label for="in_name" generated="true" class="error"/>
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text">Имя</span>
+                                    </div>
+                                    <input id="in_name" required="true" type="text" th:field="*{name}"
+                                           class="form-control"/>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="in_email" generated="true" class="error"/>
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text">Эл. почта</span>
+                                    </div>
+                                    <input id="in_email" required="true" type="email" th:field="*{email}"
+                                           placeholder="user@mail.com"
+                                           class="form-control"/>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text">Роль</span>
+                                    </div>
+                                    <select required="true" size="3" class="form-control"
+                                            th:field="*{role}"
+                                            th:remove="all-but-first">
+                                        <option th:each="role, iter: ${T(by.spalex.diplom.hr.model.Role).values()}"
+                                                th:field="*{role}"
+                                                th:value="${role}"
+                                                th:text="${role.getName()}"
+                                        />
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="in_pass" generated="true" class="error"/>
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text">Пароль</span>
+                                    </div>
+                                    <input id="in_pass" th:required="${edited_item.id>0?false:true}" type="password"
+                                           th:field="*{password}" class="form-control"/>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text">Повтор пароля</span>
+                                    </div>
+                                    <input type="password" id="passRepeat" name="passRepeat" class="form-control"/>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="form-check">
+                                    <div>
+                                        <label class="text-light form-check-label">
+                                            <input type="checkbox" class="form-check-input" th:field="*{active}"/>
+                                            Активен&nbsp;
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+                <div class="btn-group col-12">
+                    <button class="text-light btn bg-primary col-4 mx-auto"
+                            onclick="postdata('admin/user/edit', $('#edit_form'))">Сохранить
+                    </button>
+                    <a type="button" class="text-light btn bg-primary col-4 mx-auto"
+                       onclick="$('#editModal').modal('hide')">Вернуться</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div th:fragment="table_fragment">
+    <input type="hidden" id="frag_message" th:value="${message}"/>
+    <div class="tablediv my-3 table-responsive">
+        <table class="table table-bordered ">
+            <thead class="thead">
+            <tr>
+                <th>Имя пользователя</th>
+                <th>Электронная почта</th>
+                <th>Роль</th>
+                <th>Активен</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:if="${users.empty}">
+                <td colspan="3">Список пуст</td>
+            </tr>
+            <tr class="selectable_row" th:each="user, iter : ${users}" th:id="${'row_' + iter.count}"
+                th:onclick="${'javascript:onRowSelect(''row_' + iter.count +''', ' + user.id+')'}">
+                <td th:text="${user.name}"></td>
+                <td th:text="${user.email}"></td>
+                <td th:text="${user.role.getName()}"></td>
+                <td th:text="${user.active?'активен':'неактивен'}"></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+</body>
+</html>

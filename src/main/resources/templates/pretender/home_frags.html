@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+
+<div th:fragment="edit_fragment">
+    <input type="hidden" id="frag_message" th:value="${message}"/>
+        <h4 class="text-light text-center my-3 mx-auto">Редактирование анкеты</h4>
+    <form id="edit_form" autocomplete="off" action="#" th:action="@{/pretender/pretender/edit}"
+          th:value="${edited_item}"
+          th:object="${edited_item}" method="post" class="form-horizontal" role="form"
+          enctype="multipart/form-data">
+        <div class="row">
+            <div class="col-6 mx-auto text-center">
+                <img th:src="@{(${edited_item.image!=null}?('data:image/png;base64,' + ${edited_item.image}): ('/images/nophoto.jpg'))}"
+                     class="card-img-top rounded" alt="image" style="max-width: 200px; max-height: 200px"/>
+                <input id="edit_id" type="hidden" th:value="*{id}" th:field="*{id}"/>
+                <input id="edit_user" type="hidden" th:value="*{user}" th:field="*{user}"/>
+                <select hidden="hidden" class="form-control" multiple="multiple" th:field="*{skillValues}"
+                        th:remove="all-but-first">
+                    <option th:each="skillValue, iter: ${edited_item.skillValues}"
+                            th:field="*{skillValues}"
+                            th:value="${skillValue.id}"
+                            th:text="${skillValue.getSkill().getName()+': '+skillValue.getValueName()}"
+                    />
+                </select>
+                <div class="form-group">
+                    <label for="edit_name" generated="true" class="error"/>
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text">Ф.И.О.</span>
+                        </div>
+                        <input required="true" id="edit_name" type="text" th:field="*{user.name}"
+                               class="form-control"/>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="edit_birthDate" generated="true" class="error"/>
+                    <div class="input-group">
+                        <label th:if="${#fields.hasErrors('birthDate')}" th:errors="*{birthDate}"
+                               class="text-light validation-message"></label>
+                        <div class="input-group-prepend">
+                            <span class="input-group-text">Дата рождения</span>
+                        </div>
+                        <input required="true" id="edit_birthDate" type="date"
+                               th:field="*{birthDate}"
+                               class="form-control"/>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="edit_address" generated="true" class="error"/>
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text">Адрес</span>
+                        </div>
+                        <input required="true" id="edit_address" type="text" th:field="*{address}"
+                               class="form-control"/>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="edit_phone" generated="true" class="error"/>
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text">Телефон</span>
+                        </div>
+                        <input required="true" id="edit_phone" type="text" th:field="*{phone}"
+                               class="form-control"/>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="edit_email" generated="true" class="error"/>
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text">Эл. почта</span>
+                        </div>
+                        <input required="true" id="edit_email" type="email" th:field="*{user.email}"
+                               class="form-control"/>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="image_file" generated="true" class="error"/>
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text">Фото</span>
+                        </div>
+                        <input id="image_file" name="image_file" type="file" th:value="${image}"
+                               class="form-control text-light btn bg-primary"/>
+                    </div>
+                </div>
+
+            </div>
+            <div class="col-6 mx-auto">
+                <div th:each="skillValue, stat: *{skillValues}">
+                    <div th:hidden="${skillValue.skill.isAge()}"  class="form-group">
+                        <label for="edit_address" generated="true" class="error"/>
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text" th:text="${skillValue.skill.name}"></span>
+                            </div>
+                            <select class="form-control" th:field="*{skillValues[__${stat.index}__].value}"
+                                    th:remove="all-but-first">
+                                <option th:each="value: ${skillValue.skill.values}"
+                                        th:field="*{skillValues[__${stat.index}__].value}"
+                                        th:value="${value.id}"
+                                        th:text="${value.name} "
+                                />
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </form>
+    <div class="row">
+        <div class="col-4 mx-auto">
+            <button class="text-light btn bg-primary"
+                    onclick="window.print()">Печать
+            </button>
+        </div>
+        <div class="col-4 mx-auto">
+            <button class="text-light btn bg-primary"
+                    onclick="postdata('pretender/pretender/edit', $('#edit_form'), 'edit_div')">Сохранить
+            </button>
+        </div>
+    </div>
+    <div class="A4">
+        <div class="fixed-top sheet padding-15mm d-none d-print-block do-print" role="document"
+             style="position: fixed; top: 15mm">
+            <div class="modal-content  border-0 p-3" style="position: relative">
+                <div class="modal-header">
+                    <h5 class="modal-title col-12 text-center"
+                        th:text="${edited_item.user.name + ', рейтинг ' + #numbers.formatDecimal(edited_item.getSkillRates() * 100, 0, 2)}">
+                        анкета</h5>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-6">
+                            <img th:src="@{(${edited_item.image!=null}?('data:image/png;base64,' + ${edited_item.image}): ('/images/nophoto.jpg'))}"
+                                 class="card-img-top rounded " alt="image"/>
+                        </div>
+                        <div class="col-6">
+                            <p class="card-text">
+                            <p th:text="'Дата рождения: '+ ${#temporals.format(edited_item.birthDate, 'dd-MM-yyyy')}"/>
+                            <p th:text="'Адрес:         '+ ${edited_item.address}"/>
+                            <p th:text="'Телефон:       ' + ${edited_item.phone}"/>
+                            </p>
+                            <div th:each="item: ${edited_item.skillValues}">
+                                <p th:text="${item.skill.name + ': ' + item.valueName}"/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

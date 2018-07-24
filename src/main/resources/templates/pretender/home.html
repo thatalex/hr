@@ -1,0 +1,12 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<div th:fragment="main">
+    <div id="edit_div"/>
+
+    <script th:inline="javascript">
+        $(window).on('load', function () {
+            showedit    ('pretender/pretender');
+        });
+    </script>
+</div>
+</html>

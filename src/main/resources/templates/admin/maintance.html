@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+<div th:fragment="main">
+    <h4 class="text-light my-3">Обслуживание</h4>
+    <div class="btn-group blocks my-3" role="group">
+        <a th:href="@{/admin/maintance}" class="text-light btn btn-primary  mx-3">Обновить</a>
+        <a th:href="@{/admin/backup}" class="text-light btn btn-primary  mx-3">Бекап</a>
+    </div>
+    <div th:if="${logitems}" class="tablediv my-3 table-responsive">
+        <table class="table table-bordered ">
+            <thead class="thead">
+            <tr>
+                <th>Дата</th>
+                <th>Тип</th>
+                <th>Инициатор</th>
+                <th>Сообщение</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:if="${logitems.empty}">
+                <td colspan="4">Список пуст</td>
+            </tr>
+            <tr th:each="item, iter : ${logitems}" th:id="${'row_' + iter.count}">
+                <td th:text="${#temporals.format(item.date, 'yyyy-MM-dd HH:mm')}"></td>
+                <td th:text="${item.level}"></td>
+                <td th:text="${item.invoker}"></td>
+                <td th:text="${item.message}"></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+</body>
+</html>

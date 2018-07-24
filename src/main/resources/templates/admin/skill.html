@@ -1,0 +1,31 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<div th:fragment="main">
+    <h4 class="text-light my-3">Список критериев</h4>
+
+    <div class="row">
+        <div class="input-group my-3 col-12">
+            <button id="create_button" class="text-light btn bg-primary mx-3"
+                    th:onclick="${'showedit(''admin/skill?id=0'');'+(max_priority>0?'$(''#create_button'').removeAttr(''disabled'')':'')}"
+                    th:disabled="${!(max_priority>0)}">
+                Создать
+            </button>
+            <button class="text-light btn bg-primary  mx-3"
+                    th:onclick="${'showedit(''admin/skill?id=''+selId);'+(max_priority>0?'$(''#create_button'').removeAttr(''disabled'')':'')}">
+                Редактировать
+            </button>
+            <button class="text-light btn bg-primary mx-3"
+                    onclick="postdata('admin/skill/delete?id='+selId);$('#create_button').removeAttr('disabled')">
+                Удалить
+            </button>
+        </div>
+    </div>
+    <div id="table_div"/>
+    <div id="edit_div"/>
+    <script th:inline="javascript">
+        $(window).on('load', function () {
+            postdata('admin/skills');
+        });
+    </script>
+</div>
+</html>

@@ -1,0 +1,11 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<body>
+
+<ul th:fragment="navbar" sec:authorize="hasAnyAuthority('CHIEF')" class="nav nav-pills">
+
+</ul>
+
+</body>
+</html>

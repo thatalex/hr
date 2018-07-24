@@ -1,0 +1,53 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<div th:fragment="main">
+    <h4 class="text-light my-3" th:text="${'Всего анкет: ' + pretenderCount}">Список анкет</h4>
+    <form id="filter_form">
+        <div class="row">
+            <div class="input-group my-1 col-12">
+                <div class="col-3 input-group mx-0">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">Ф.И.О.</span>
+                    </div>
+                    <input name="filter_name" type="text" th:value="${filter_name}" class="form-control"
+                           autofocus="true"/>
+                </div>
+                <div class="col-3 input-group mx-0">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">Критерий</span>
+                    </div>
+                    <select name="filter_skill" class="form-control" th:value="${filter_skill}"
+                            th:remove="all-but-first">
+                        <option th:each="skill, iter: ${skills}"
+                                th:value="${skill!=null?skill.id:null}"
+                                th:text="${skill!= null?skill.getName():''}"
+                                th:selected="${filter_skill == skill}"></option>
+                    </select>
+                </div>
+            </div>
+        </div>
+    </form>
+
+    <div class="row">
+        <div class="input-group my-3 col-12">
+            <button class="text-light btn bg-primary mx-3"
+                    onclick="postdata('admin/pretenders', $('#filter_form'))">Поиск
+            </button>
+            <button class="text-light btn bg-primary  mx-3" onclick="showedit('admin/pretender?id='+selId);">
+                Редактировать
+            </button>
+            <button class="text-light btn bg-primary mx-3"
+                    onclick="postdata('admin/pretender/delete?id='+selId, $('#filter_form'))">Удалить
+            </button>
+        </div>
+    </div>
+    <div id="table_div"/>
+    <div id="edit_div"/>
+    <div id="view_div"/>
+    <script th:inline="javascript">
+        $(window).on('load', function () {
+            postdata('admin/pretenders', $('#filter_form'));
+        });
+    </script>
+</div>
+</html>
